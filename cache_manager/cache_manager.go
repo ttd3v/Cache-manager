@@ -38,12 +38,12 @@ func (entity *Mem_cache) Start() {
 	}()
 }
 
-func (entity *Mem_cache) Get_key(key string) [32]byte {
+func (entity *Mem_cache) GetKey(key string) [32]byte {
 	return sha256.Sum256([]byte(key))
 }
 
 func (entity *Mem_cache) Set(key string, value any) {
-	address := entity.Get_key(key)
+	address := entity.GetKey(key)
 	val := Instance_cache{
 		Health: entity.Life_time,
 		Value:  value,
@@ -55,7 +55,7 @@ func (entity *Mem_cache) Set(key string, value any) {
 }
 
 func (entity *Mem_cache) Remove(key string) {
-	address := entity.Get_key(key)
+	address := entity.GetKey(key)
 	entity.Kill(address)
 }
 
@@ -66,7 +66,7 @@ func (entity *Mem_cache) Kill(address [32]byte) {
 }
 
 func (entity *Mem_cache) Get(key string) Instance_cache {
-	address := entity.Get_key(key)
+	address := entity.GetKey(key)
 
 	entity.Mu.Lock()
 	defer entity.Mu.Unlock()
@@ -83,7 +83,7 @@ func (entity *Mem_cache) Extract(address [32]byte) Instance_cache {
 }
 
 func (entity *Mem_cache) Exists(key string) bool {
-	address := entity.Get_key(key)
+	address := entity.GetKey(key)
 
 	entity.Mu.Lock()
 	defer entity.Mu.Unlock()
